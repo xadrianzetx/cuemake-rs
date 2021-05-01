@@ -29,3 +29,32 @@ pub fn make_cue(rom_name: String, output: Option<&str>) -> Result<()> {
 
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::env;
+
+    #[test]
+    fn test_invalid_file() {
+        let result = make_cue(String::from("foo.img"), None).is_err();
+        assert!(result);
+    }
+
+    #[test]
+    fn test_cue_exists_current_dir() {
+        let _result = make_cue(String::from("foo.bin"), None);
+        assert!(Path::new("foo.cue").exists());
+    }
+
+    #[test]
+    fn test_cue_exists_foreign_dir() {
+        let tmp_dir = env::temp_dir();
+        let file_path = tmp_dir.to_str().unwrap();
+        let _result = make_cue(String::from("foo.bin"), Some(&file_path));
+
+        let mut target = String::from(file_path);
+        target.push_str("foo.cue");
+        assert!(Path::new(&target).exists());
+    }
+}
