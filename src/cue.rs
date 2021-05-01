@@ -21,9 +21,9 @@ pub fn make_cue(rom_name: String, output: Option<&str>) -> Result<()> {
         None => PathBuf::from(&cue_name)
     };
 
-    // TODO check if payload correct on PSX
-    let mut payload = String::from("FILE  BINARY\nTRACK 01 MODE2/2352\nINDEX 01 00:00:00");
-    payload.insert_str(5, &rom_name);
+    let raw_payload = "FILE \"\" BINARY\n  TRACK 01 MODE2/2352\n    INDEX 01 00:00:00";
+    let mut payload = String::from(raw_payload);
+    payload.insert_str(6, &rom_name);
     let mut f = File::create(output_file)?;
     f.write(payload.as_bytes())?;
 
